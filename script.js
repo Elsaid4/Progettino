@@ -134,7 +134,14 @@ document.getElementById("yesBtn").addEventListener("mouseout", () => changeImg("
 
 window.onload = function() {
     changeImg("shy");
+    document.getElementById("audioPlayer").play();
 };
+
+// on first click unmute audioplayer
+document.addEventListener("click", function() {
+    var audioPlayer = document.getElementById("audioPlayer");
+    audioPlayer.play();
+});
 
 
 function changeImg(type) {
