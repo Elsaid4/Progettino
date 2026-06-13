@@ -2,6 +2,8 @@ document.getElementById("noBtn").addEventListener("click", noBtnClicked);
 document.getElementById("yesBtn").addEventListener("click", yesBtnClicked);
 
 function yesBtnClicked() {
+    document.getElementById("audioPlayer").pause();
+    document.getElementById("yeyAudioPlayer").play();
     createFireworksEffect();
 }
 
@@ -94,6 +96,8 @@ function createFireworksEffect() {
         if (canvas.parentNode) {
             canvas.parentNode.removeChild(canvas);
         }
+        document.getElementById("yeyAudioPlayer").pause();
+        document.getElementById("audioPlayer").play();
     };
 
     requestAnimationFrame(animate);
@@ -101,6 +105,7 @@ function createFireworksEffect() {
 }
 
 function noBtnClicked() {
+    document.getElementById("noAudioPlayer").play();
     var noBtn = document.getElementById("noBtn");
     var windowWidth = 500;
     var windowHeight = 500;
@@ -113,6 +118,8 @@ function noBtnClicked() {
         noBtnClicked();
         return;
     }
+
+    noBtn.style.transition = "left 0.5s, top 0.5s";
     noBtn.style.position = "absolute";
     noBtn.style.left = randomX + "px";
     noBtn.style.top = randomY + "px";
@@ -141,3 +148,5 @@ function changeImg(type) {
     document.getElementById("img1").src = "Images/" + type + randomNum1 + ".gif";
     document.getElementById("img2").src = "Images/" + type + randomNum2 + ".gif";
 }
+
+
