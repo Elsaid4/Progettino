@@ -12,3 +12,58 @@ body{
     pointer-events: none;
     z-index: 9999;
 }
+
+/* Miglior keyframes per i frammenti del pulsante "No" */
+@keyframes no-explode {
+  0% {
+    opacity: 1;
+    transform: translate(0, 0) rotate(0) scale(1);
+    filter: blur(0px);
+  }
+  60% {
+    opacity: 1;
+    filter: blur(0.6px);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--tx, 0), var(--ty, 0)) rotate(var(--rot, 0)) scale(var(--scale, 0.6));
+    filter: blur(2px);
+  }
+}
+
+/* Assicura che la card contenga i frammenti assoluti */
+.card {
+  position: relative;
+  overflow: visible;
+}
+
+.no-btn-fragment {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 10px;
+  height: 10px;
+  background: var(--bg, #dc3545);
+  border-radius: 4px;
+  transform-origin: center center;
+  box-shadow: 0 6px 12px rgba(0,0,0,0.12), 0 2px 4px rgba(255,255,255,0.06) inset;
+  animation: no-explode 900ms cubic-bezier(.2,.8,.2,1) forwards;
+  will-change: transform, opacity, filter;
+}
+
+.no-btn-fragment::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(180deg, rgba(255,255,255,0.12), transparent);
+  mix-blend-mode: screen;
+}
+
+/* piccola scintilla (sub-particle) */
+.no-btn-fragment.spark {
+  border-radius: 50%;
+  opacity: 0.95;
+  transform-origin: center center;
+  animation-duration: 700ms;
+}

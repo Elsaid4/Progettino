@@ -1,12 +1,3 @@
-document.getElementById("noBtn").addEventListener("click", noBtnClicked);
-document.getElementById("yesBtn").addEventListener("click", yesBtnClicked);
-
-function yesBtnClicked() {
-    document.getElementById("audioPlayer").pause();
-    document.getElementById("yeyAudioPlayer").play();
-    createFireworksEffect();
-}
-
 function createFireworksEffect() {
     const canvas = document.createElement("canvas");
     canvas.className = "fireworks-canvas";
@@ -104,9 +95,43 @@ function createFireworksEffect() {
     setTimeout(cleanup, 10000);
 }
 
+document.getElementById("noBtn").addEventListener("click", noBtnClicked);
+document.getElementById("yesBtn").addEventListener("click", yesBtnClicked);
+
+function yesBtnClicked() {
+    try { document.getElementById("yeyAudioPlayer").play(); } catch (e) {}
+    createFireworksEffect();
+}
+
+var counterNo = 0;
+var maxNo = 10;
+
 function noBtnClicked() {
-    document.getElementById("noAudioPlayer").play();
+    counterNo++;
     var noBtn = document.getElementById("noBtn");
+    if (counterNo >= maxNo) {
+        explode();
+        return;
+    }
+
+    var intensity = counterNo / maxNo; 
+
+    var r = Math.floor(220 - (120 * intensity));
+    var g = Math.floor(53 - (53 * intensity));
+    var b = Math.floor(69 - (69 * intensity));
+    
+    var scale = 1 + (0.4 * intensity);
+    
+    var shadowBlur = intensity * 25;
+
+    noBtn.style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
+    noBtn.style.borderColor = `rgb(${r - 20}, 0, 0)`;
+    noBtn.style.transform = `scale(${scale})`;
+    noBtn.style.boxShadow = `0 0 ${shadowBlur}px rgba(255, 0, 0, ${intensity})`;
+
+
+    document.getElementById("noAudioPlayer").play();
+    
     var windowWidth = 500;
     var windowHeight = 500;
     var btnWidth = noBtn.offsetWidth;
@@ -114,15 +139,84 @@ function noBtnClicked() {
     var randomX = Math.floor(Math.random() * (windowWidth - btnWidth));
     var randomY = Math.floor(Math.random() * (windowHeight - btnHeight));
     var noBtnPosition = noBtn.getBoundingClientRect();
+    
     if (randomX < noBtnPosition.left + btnWidth && randomX + btnWidth > noBtnPosition.left && randomY < noBtnPosition.top + btnHeight && randomY + btnHeight > noBtnPosition.top) {
         noBtnClicked();
         return;
     }
 
+    
+    
+
     noBtn.style.transition = "left 0.5s, top 0.5s";
     noBtn.style.position = "absolute";
     noBtn.style.left = randomX + "px";
     noBtn.style.top = randomY + "px";
+}
+
+function explode() {
+    var card = document.querySelector(".card");
+    var noBtn = document.getElementById("noBtn");
+
+    // palette colori e numero di particelle
+    // var colors = ["#ff6b6b", "#ffcd69", "#ffd56b", "#7be495", "#7ad7ff", "#d07bff"];
+    var colors = ["#ff0000", "#ffaa00", "#ffb700", "#e20606", "#ff7a7a", "#790000"];
+    var count = 100;
+
+    var cardRect = card.getBoundingClientRect();
+    var btnRect = noBtn.getBoundingClientRect();
+    var originX = btnRect.left + btnRect.width / 2 - cardRect.left;
+    var originY = btnRect.top + btnRect.height / 2 - cardRect.top;
+
+    for (var i = 0; i < count; i++) {
+        var fragment = document.createElement("div");
+        fragment.classList.add("no-btn-fragment");
+
+        var size = 6 + Math.random() * 14;
+        fragment.style.width = size + "px";
+        fragment.style.height = size + "px";
+
+        // posiziona all'origine (centro del pulsante) relativa alla card
+        fragment.style.left = (originX - size / 2) + "px";
+        fragment.style.top = (originY - size / 2) + "px";
+
+        // calcola destinazione usando angolo e distanza random
+        var angle = Math.random() * Math.PI * 2;
+        var distance = 80 + Math.random() * 240;
+        var tx = Math.cos(angle) * distance;
+        var ty = Math.sin(angle) * distance * (0.7 + Math.random() * 0.6);
+        var rot = (Math.random() * 720 - 360) + "deg";
+        var scale = 0.6 + Math.random() * 1.6;
+
+        fragment.style.setProperty('--tx', tx + 'px');
+        fragment.style.setProperty('--ty', ty + 'px');
+        fragment.style.setProperty('--rot', rot);
+        fragment.style.setProperty('--scale', scale);
+        fragment.style.setProperty('--bg', colors[Math.floor(Math.random() * colors.length)]);
+
+        fragment.style.animationDelay = (Math.random() * 200) + 'ms';
+
+        // alcune particelle saranno "spark" più rotonde
+        if (Math.random() < 0.25) fragment.classList.add('spark');
+
+        card.appendChild(fragment);
+
+        // rimuovi al termine dell'animazione
+        fragment.addEventListener('animationend', function () { this.remove(); });
+    }
+
+    // piccolo effetto shake sulla card
+    if (card.animate) {
+        card.animate([
+            { transform: 'translateY(0)' },
+            { transform: 'translateY(-8px)' },
+            { transform: 'translateY(0)' }
+        ], { duration: 360, easing: 'cubic-bezier(.2,.8,.2,1)' });
+    }
+
+    try { document.getElementById("explosionAudioPlayer").play(); } catch (e) {}
+
+    noBtn.style.display = "none"; // nascondi il pulsante NO dopo l'esplosione
 }
 
 document.getElementById("noBtn").addEventListener("mouseover", () => changeImg("cry"));
@@ -134,18 +228,16 @@ document.getElementById("yesBtn").addEventListener("mouseout", () => changeImg("
 
 window.onload = function() {
     changeImg("shy");
-    document.getElementById("audioPlayer").play();
 };
 
 // on first click unmute audioplayer
 document.addEventListener("click", function() {
-    var audioPlayer = document.getElementById("audioPlayer");
+    try { document.getElementById("audioPlayer").play(); } catch (e) {}
     audioPlayer.play();
 });
 
 
 function changeImg(type) {
-    console.log("Changing images to type: " + type);
     var randomNum1 = Math.floor(Math.random() * 7) + 1;
     var randomNum2;
     do{
