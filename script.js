@@ -104,7 +104,7 @@ function yesBtnClicked() {
 }
 
 var counterNo = 0;
-var maxNo = 10;
+var maxNo = 5;
 
 function noBtnClicked() {
     counterNo++;
