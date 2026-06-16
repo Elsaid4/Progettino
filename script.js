@@ -93,6 +93,11 @@ function createFireworksEffect() {
 
     requestAnimationFrame(animate);
     setTimeout(cleanup, 10000);
+    // send user to yay.html
+    setTimeout(() => {
+        window.location.href = "yey.html";
+    }, 10000);
+
 }
 
 document.getElementById("noBtn").addEventListener("click", noBtnClicked);
