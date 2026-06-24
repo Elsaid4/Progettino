@@ -3,6 +3,7 @@ function createFireworksEffect() {
     canvas.className = "fireworks-canvas";
     document.body.appendChild(canvas);
 
+    var windowWidth = Math.min(window.innerWidth, 500);
     const ctx = canvas.getContext("2d");
     const resize = () => {
         canvas.width = window.innerWidth;
@@ -41,7 +42,7 @@ function createFireworksEffect() {
 
         // add text
         ctx.fillStyle = "white";
-        ctx.font = "100px Arial";
+        ctx.font = "70px Arial";
         ctx.textAlign = "center";
         
         ctx.fillText(randomText, canvas.width / 2, canvas.height / 2);
@@ -137,12 +138,15 @@ function noBtnClicked() {
 
     document.getElementById("noAudioPlayer").play();
     
-    var windowWidth = 500;
-    var windowHeight = 500;
+    var windowWidth = Math.min(window.innerWidth, 500);
+    if (window.innerWidth < 600) {
+        windowWidth = window.innerWidth - 20;
+    }
+    var windowHeight = Math.min(window.innerHeight, 500);
     var btnWidth = noBtn.offsetWidth;
     var btnHeight = noBtn.offsetHeight;
-    var randomX = Math.floor(Math.random() * (windowWidth - btnWidth));
-    var randomY = Math.floor(Math.random() * (windowHeight - btnHeight));
+    var randomX = Math.floor(Math.random() * Math.max(1, windowWidth - btnWidth));
+    var randomY = Math.floor(Math.random() * Math.max(1, windowHeight - btnHeight));
     var noBtnPosition = noBtn.getBoundingClientRect();
     
     if (randomX < noBtnPosition.left + btnWidth && randomX + btnWidth > noBtnPosition.left && randomY < noBtnPosition.top + btnHeight && randomY + btnHeight > noBtnPosition.top) {

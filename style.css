@@ -67,3 +67,20 @@ body{
   transform-origin: center center;
   animation-duration: 700ms;
 }
+
+@media (min-width: 600px){
+  .card{
+    width: 560px; 
+    height: 500px; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+    margin: auto; 
+  }
+  .img-fluid{width: 250px !important;}
+}
+
+@media (max-width: 1000px){
+  .card{width: 400px}
+  .img-fluid{width: 150px !important;}
+}
